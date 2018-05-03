@@ -1,7 +1,6 @@
 # Excercise2: SQL Movie-Rating Query Exercises Extras
 
-Q1.Find the names of all reviewers who rated Gone with the Wind. 
---- 
+-- Q1.Find the names of all reviewers who rated Gone with the Wind. 
 select name
 from Reviewer
 where rID in 
