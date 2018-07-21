@@ -7,14 +7,14 @@ FROM Candidate,
     FROM Vote
     GROUP BY CandidateId
    ) VoteCount
- WHERE Candidate.id = VoteCount.id
-  AND VoteCount.Count in (
-    SELECT MAX(Count)
-    FROM 
-      (SELECT CandidateId, COUNT(id) Count
-      FROM Vote
-      GROUP BY CandidateId
-      ) VoteCount
+WHERE Candidate.id = VoteCount.CandidateId
+    AND VoteCount.Count in (
+      SELECT MAX(Count)
+      FROM 
+        (SELECT CandidateId, COUNT(id) Count
+        FROM Vote
+        GROUP BY CandidateId
+        ) VoteCount
      )
  
  -- 610. Triangle Judgement (easy)
@@ -41,12 +41,12 @@ FROM (SELECT SQRT((p1.x-p2.x)**2 + (p1.y-p2.y)**2) distance
  -- https://leetcode.com/articles/tree-node/
  SELECT t1.id
     CASE
-        WHEN t1.p_id IS NULL THEN Root
+        WHEN t1.p_id IS NULL THEN 'Root'
         WHEN t1.id NOT IN (SELECT t2.p_id
                            FROM tree t2
-                           ) THEN Leaf
+                           ) THEN 'Leaf'
         ELSE Inner    
-    END AS Type
+    END AS 'Type'
  FROM tree t1
  
 -- 612. Shortest Distance in a Plane 
