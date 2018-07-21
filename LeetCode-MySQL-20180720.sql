@@ -39,5 +39,20 @@ FROM (SELECT SQRT((p1.x-p2.x)**2 + (p1.y-p2.y)**2) distance
  
  -- 608.Tree Node
  -- https://leetcode.com/articles/tree-node/
+ SELECT t1.id
+    CASE
+        WHEN t1.p_id IS NULL THEN Root
+        WHEN t1.id NOT IN (SELECT t2.p_id
+                           FROM tree t2
+                           ) THEN Leaf
+        ELSE Inner    
+    END AS Type
+ FROM tree t1
  
+-- 612. Shortest Distance in a Plane 
+-- https://code.dennyzhang.com/second-degree-follower
+
+
+
+
  
