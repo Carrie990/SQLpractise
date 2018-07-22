@@ -60,7 +60,7 @@ WITH AnswerNum AS (
 ), QuestionNum AS (
     SELECT question_id, COUNT(1) as quesnum
     FROM survey_log
-    WHERE acttion != 'skip'
+    WHERE acttion = 'show'
     GROUP BY question_id
 ), AnswerRate AS (
     SELECT AnswerNum.question_id,ansnum/quesnum AS ansrate
