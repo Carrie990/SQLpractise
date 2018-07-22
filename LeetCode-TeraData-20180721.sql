@@ -41,7 +41,7 @@ WITH Group2015 AS (
 )
 SELECT ROUND(SUM(TIV_2016),2) AS TIV_2016
 FROM insurance I
-WHERE I.PID in ( SELECT PID
+WHERE I.PID NOT IN ( SELECT PID
                 FROM SameLoc
     ) AND I.TIV_2015 in (SELECT TIV_2015
                          FROM Group2015
@@ -60,6 +60,7 @@ WITH AnswerNum AS (
 ), QuestionNum AS (
     SELECT question_id, COUNT(1) as quesnum
     FROM survey_log
+    WHERE acttion != 'skip'
     GROUP BY question_id
 ), AnswerRate AS (
     SELECT AnswerNum.question_id,ansnum/quesnum AS ansrate
