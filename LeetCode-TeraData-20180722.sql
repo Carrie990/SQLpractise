@@ -25,51 +25,24 @@ ORDER BY cnt DESC, dept_name
 -- 
 -- TeraData 
 SELECT America, Asia, Europe
-FROM (SELECT name AS America
+FROM (SELECT name AS America, RANK() OVER(ORDER by name) AS amid
      FROM student
      WHERE continent = 'America'
-     ORDER BY name
      ) T1,
-     (SELECT name AS Asia
+     (SELECT name AS Asia, RANK() OVER(ORDER BY name) AS asid
       FROM student
-      WHERE continent = 'Asia'
-      ORDER BY name
+      WHERE continent = 'Asia'  
      ) T2,
-     (SELECT name AS Europe
+     (SELECT name AS Europe, RANK() OVER(ORDER BY name) AS euid
       FROM student
       WHERE continent = 'Europe'
-      ORDER BY name
      ) T3
+WHERE amid = asid
+    AND asid = euid
+ORDER BY amid
 
 -- FOLLOW UP
-WITH stucnt AS(
-    SELECT continent, COUNT(name) AS cnt, @rank:=rank+1 AS rank
-    FROM student, 
-        (SELECT @rank:=0) r    
-    GROUP BY continent
-    ORDER BY cnt DESC
-)
-SELECT (SELECT name 
-        FROM student,stucnt
-        WHERE rank = 1
-        ORDER BY name
-    ) AS (SELECT continent
-         FROM stucnt
-         LIMIT 1),
-        (SELECT name 
-        FROM student,stucnt
-        WHERE rank = 2
-        ORDER BY name
-    ) AS (SELECT continent
-         FROM stucnt
-         LIMIT 1,1),
-         (SELECT name 
-        FROM student,stucnt
-        WHERE rank = 3
-        ORDER BY name
-    ) AS (SELECT continent
-         FROM stucnt
-         LIMIT 2,1)
+
          
        
 -- 571. Find Median Given Frequency of Numbers
@@ -92,8 +65,8 @@ SELECT
                                         AND EndFre >= (numsum/2+1))
         ELSE SELECT  AVG(Number) AS Number 
             FROM (SELECT Number 
-              FROM FreCnt
-              WHERE (StartFre <= numsum/2 AND EndFre >= numsum/2)
+                FROM FreCnt
+                WHERE (StartFre <= numsum/2 AND EndFre >= numsum/2)
                     OR (StartFre <= (numsum/2+1) AND EndFre >= (numsum/2+1)) 
             ) Temp       
     END AS Median
