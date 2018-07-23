@@ -72,6 +72,32 @@ SELECT (SELECT name
          LIMIT 2,1)
          
        
+-- 571. Find Median Given Frequency of Numbers
+-- https://jogchat.com/shuati/60%E5%A4%A9%E5%B8%A6%E4%BD%A0%E5%88%B7%E5%AE%8CLeetcode%E3%80%90%E7%AC%AC11%E5%A4%A9%E3%80%91574%20_%20564.php
+WITH FreCnt AS(
+    SELECT N1.Number, N1.Frequency, SUM(N2.Frequency)-N1.Frequency+1 AS StartFre, SUM(N2.Frequency) AS EndFre
+    FROM Number N1, Number N2
+    WHERE N1.Number >= N2.Number
+    GROUP BY N1.Number    
+    ORDER BY N1.Number
+), NumSum AS(
+    SELECT SUM(Frequency) numsum
+    FROM Numbers
+)
+SELECT
+    CASE
+        WHEN MOD(numsum,2) = 1 THEN (SELECT Number
+                                     FROM FreCnt
+                                     WHERE StartFre <= (numsum/2+1) 
+                                        AND EndFre >= (numsum/2+1))
+        ELSE SELECT  AVG(Number) AS Number 
+            FROM (SELECT Number 
+              FROM FreCnt
+              WHERE (StartFre <= numsum/2 AND EndFre >= numsum/2)
+                    OR (StartFre <= (numsum/2+1) AND EndFre >= (numsum/2+1)) 
+            ) Temp       
+    END AS Median
+ FROM NumSum
 
-
+    
 
