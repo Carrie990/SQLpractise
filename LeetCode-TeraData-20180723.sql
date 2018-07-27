@@ -28,26 +28,20 @@ WHERE
 ;
 
 -- TeraData (?)
-WITH EmployeeRank AS (
-    SELECT Company,RANK() OVER(ORDER BY Salary) AS rank
+WITH rank AS (
+    SELECT Id, Company, Salary, RANK() OVER(PARTITION BY Company ORDER BY Salary) AS rank
+    FROM Employee
+), cnt AS(
+    SELECT Company, COUNT(*) AS num
     FROM Employee
     GROUP BY Company
 )
-SELECT Company,
-    CASE
-        WHEN MOD(COUNT(Employee),2) = 1 THEN (SELECT Salary
-             FROM Employee
-             WHERE rank = COUNT(Employee)/2+1
-             )
-        ELSE SELECT AVG(Salary)
-             FROM (SELECT Salary
-                   FROM Employee
-                   WHERE rank = COUNT(Employee)/2
-                        OR rank = COUNT(Employee)/2+1
-             ) temp
-    END AS Median
-FROM Employee
-GROUP BY Company
+SELECT Id, rank.Company, Salary
+FROM rank,cnt 
+WHERE rank.Company = cnt.Company
+    rank = (cnt+1)/2
+    OR rank = (cnt+2)/2
+
 
 -- 579. Find Cumulative Salary of an Employee 
 -- https://leetcode.com/articles/find-cumulative-salary-of-an-employee/
