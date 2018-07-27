@@ -41,7 +41,24 @@ WHERE amid = asid
     AND asid = euid
 ORDER BY amid
 
--- FOLLOW UP
+-- Solution 2
+WITH America AS (
+    SELECT name AS America, RANK() OVER(ORDER BY name) AS amid
+    FROM student
+    WHERE continent = 'America'
+), Asia AS (
+    SELECT name AS Asia, RANK() OVER(ORDER BY name) AS asid
+    FROM student
+    WHERE continent = 'Asia'
+), Europe AS (
+    SELECT name AS Europe, RANK() OVER(ORDER BY name) AS euid
+    FROM student
+    WHERE continent = 'Europe'
+)
+SELECT America, Asia, Europe
+FROM America, Asia, Europe
+WHERE amid = asid
+    AND asid = euid
 
          
        
