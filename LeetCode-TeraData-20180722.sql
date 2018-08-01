@@ -84,6 +84,9 @@ FROM (
 			AND gcnt >= (total/2+1))
 	) num
 
+-- MySQL-Solution 2
+SELECT
+
 --Teradata
 WITH FreCnt AS(
     SELECT N1.Number, N1.Frequency, SUM(N2.Frequency)-N1.Frequency+1 AS StartFre, SUM(N2.Frequency) AS EndFre
