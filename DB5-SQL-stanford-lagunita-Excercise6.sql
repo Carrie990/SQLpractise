@@ -21,16 +21,13 @@ where ID1 in (
 
 -- Q3. For all cases where A is friends with B, and B is friends with C, add a new friendship for the pair A and C. Do not add duplicate friendships, friendships that already exist, or friendships with oneself. (This one is a bit challenging; congratulations if you get it right.) 
 INSERT INTO Friend
-	SELECT A, C
-	FROM 
-	(SELECT F1.ID1 A, F2.ID2 C
-	FROM Friend F1, Friend F2
-	WHERE F1.ID2 = F2.ID1
-		AND F1.ID1 <> F2.ID2
-    GROUP BY F1.ID1, F2.ID2
-	) AC
-	WHERE A not in (
-	SELECT ID1
-	FROM Friend
-	WHERE C = ID2
-	)
+SELECT f1.ID1 A, f2.ID2 C
+FROM Friend f1, Friend f2
+WHERE f1.ID2 = f2.ID1
+    AND f1.ID1 <> f2.ID2
+    AND f2.ID2 NOT IN(
+        SELECT f3.ID2
+        FROM Friend f3
+        WHERE f3.ID1 = f1.ID1
+    )
+GROUP BY A,C
