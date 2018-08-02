@@ -58,28 +58,20 @@ where H1.ID = ID1
       or (H2.ID = ID3 and H2.name = 'Cassandra'))
 
 -- Solution 2: 
-SELECT COUNT(DISTINCT ID2) num
-FROM 
-	(SELECT ID2
-	FROM 
-		(SELECT F1.ID2, F2.ID2 ID3
-		FROM Highschooler, Friend F1, Friend F2
-		WHERE name = 'Cassandra' 
-			AND ID = F1.ID1
-			AND F1.ID2 = F2.ID1
-			AND F2.ID2 <> ID
-		) Student
-	UNION
-	SELECT ID3
-	FROM 
-		(SELECT F1.ID2, F2.ID2 ID3
-		FROM Highschooler, Friend F1, Friend F2
-		WHERE name = 'Cassandra' 
-			AND ID = F1.ID1
-			AND F1.ID2 = F2.ID1
-			AND F2.ID2 <> ID
-		) Student
-	) S
+SELECT COUNT(friend) num
+FROM
+    (SELECT ID2  friend
+    FROM Highschooler h, Friend f
+    WHERE h.ID = f.ID1
+        AND name = 'Cassandra'
+    UNION
+    SELECT f2.ID2 friend
+    FROM Highschooler h, Friend f1, Friend f2
+    WHERE ID = f1.ID1
+        AND f1.ID2 = f2.ID1
+        AND f1.ID1 <> f2.ID2
+        AND name = 'Cassandra'
+    ) num
  
 -- Q5. Find the name and grade of the student(s) with the greatest number of friends. 
 
