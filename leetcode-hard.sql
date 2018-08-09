@@ -27,5 +27,17 @@ WHERE d.Id = e1.DepartmentId
   )
 ORDER BY Department,e1.Salary DESC
 
+-- 601. Human Traffic of Stadium
+-- Please write a query to display the records which have 3 or more consecutive rows and the amount of people more than 100(inclusive).
+SELECT s1.id, s1.date, s1.people
+FROM stadium s1, stadium s2, stadium s3
+WHERE ((s3.id = s2.id+1 AND s2.id = s1.id+1)
+    OR (s1.id = s3.id-1 AND s1.id = s2.id+1)
+    OR (s1.id = s3.id+1 AND s3.id = s2.id+1))
+    AND s1.people >= 100
+    AND s2.people >= 100
+    AND s3.people >= 100
+GROUP BY s1.id
+
 
 
